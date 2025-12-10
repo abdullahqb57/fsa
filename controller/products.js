@@ -1,42 +1,38 @@
 import ProductModel from "../models/productModel.js"
+import Products from "../repositories/product.js"
 
-const products = (req, res) => {
-    ProductModel.find()
-        .then(data => {
-            res.status(200)
-            res.json(data)
-        })
-        .catch(err => {
-            res.status(500)
-            res.json("Internal Server Error")
-        })
+const products = async (req, res) => {
+    try {
+        const productsRes = await Products.getProduct()
+        res.status(200)
+        res.json(productsRes)
+    } catch (error) {
+        res.status(500)
+        res.json("Internal Server Error")        
+    }
+        
 }
 
 const createProducts = async (req, res) => {
-    const productsData = new ProductModel(req.body)
-    await productsData.save()
+    await Products.createProducts(req.body)
     res.status(200)
     res.json("Success")
 }
 
 const getProductsById = async (req, res) => {
-    const id = req.params.id
-    const product = await ProductModel.find({ _id: id })
+    const product = await Products.getProductsById(req.params.id)
     res.status(200)
     res.json(product)
 }
 
 const deleteProduct = async (req, res) => {
-    const id = req.params.id
-    await ProductModel.deleteOne({ _id: id })
+    await Products.deleteProduct(req.params.id)
     res.status(200)
     res.json("Deleted Successfully")
 }
 
 const updateProduct = async (req, res) => {
-    const { id } = req.params
-    const { brand, model, price, inStock, category } = req.body
-    await ProductModel.findOneAndUpdate({_id: id}, { brand, model, price, inStock, category})
+    await Products.updateProduct(req.params.id, req.body)
     res.status(200)
     res.json("Updated Successfully")
 }
