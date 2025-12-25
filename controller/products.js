@@ -1,28 +1,52 @@
-import ProductModel from "../models/productModel.js"
 import Products from "../repositories/product.js"
+import Reviews from "../repositories/reviewRepo.js";
 
 const products = async (req, res) => {
     try {
-        const productsRes = await Products.getProduct()
+        const page = +req.params.page || 1;
+        const pageSize = +req.params.pageSize || 10
+        const {sortBy, dir, search} = req.query
+        const options = {page, pageSize, sortBy, dir, search}
+        const data = await Products.getProduct(options)
+        const totalRecords = await Products.getProductCount(options);
+        const totalPages = Math.ceil(totalRecords / pageSize)
+    
+        const response = {
+            totalRecords,
+            totalPages,
+            data
+        }
         res.status(200)
-        res.json(productsRes)
+        res.json(response)
     } catch (error) {
         res.status(500)
-        res.json("Internal Server Error")        
+        res.send(error)        
     }
         
 }
 
 const createProducts = async (req, res) => {
-    await Products.createProducts(req.body)
-    res.status(200)
-    res.json("Success")
+    try {
+        req.body.createdAt = new Date()
+        await Products.createProducts(req.body)
+        res.status(200)
+        res.json("Success")
+    } catch (error) {
+        res.status(500)
+        res.send(error)
+    }
 }
 
 const getProductsById = async (req, res) => {
     const product = await Products.getProductsById(req.params.id)
+    const reviews = await Reviews.getReviewById(req.params.id)
+    const response = {
+        product,
+        reviews
+    }
+    console.log("!!", reviews, product)
     res.status(200)
-    res.json(product)
+    res.json({response}) 
 }
 
 const deleteProduct = async (req, res) => {
