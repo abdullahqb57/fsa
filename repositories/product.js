@@ -7,7 +7,7 @@ const getProduct = (options) => {
     let filter = {}
     if(options?.search) {
         filter = {
-            $or: [{brand: { $regex: options.search, $options: 'i'} }, {brand: { $regex: options.search, $options: 'i'}}, {category: { $regex: options.search, $options: 'i'}}]
+            $or: [{brand: { $regex: options.search, $options: 'i'}}, {category: { $regex: options.search, $options: 'i'}}]
         }
     }
     return Product.find(filter, {__v: 0})
@@ -18,9 +18,9 @@ const getProduct = (options) => {
 
 const getProductCount = (options) => {
     let filter = {}
-    if(options.search) {
+    if(options?.search) {
         filter = {
-            $or: [{brand: { $regex: options.search, $options: 'i'} }, {brand: { $regex: options.search, $options: 'i'}}, {category: { $regex: options.search, $options: 'i'}}]
+            $or: [{brand: { $regex: options.search, $options: 'i'}}, {category: { $regex: options.search, $options: 'i'}}]
         }
     }
     return Product.countDocuments(filter)
