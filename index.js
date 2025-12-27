@@ -30,6 +30,8 @@ app.use(morgan('combined', { stream: fileStream }));
 
 app.use(bodyParser.json());
 
+app.use(express.static('uploads/'))
+
 app.use("/api/users", users);
 
 

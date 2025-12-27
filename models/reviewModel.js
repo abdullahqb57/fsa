@@ -9,4 +9,7 @@ const reviewSchema = new mongoose.Schema({
     productId: { type: String, required: true  }
 })
 
+//Performance
+reviewSchema.index({productId: 1})
+
 export default mongoose.model('review', reviewSchema); 

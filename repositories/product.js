@@ -1,17 +1,17 @@
 import Product from "../models/productModel.js";
 
 const getProduct = (options) => {
-    if(!options.sortBy) {
+    if(!options?.sortBy) {
         options.sortBy = "updatedAt"
     }
     let filter = {}
-    if(options.search) {
+    if(options?.search) {
         filter = {
             $or: [{brand: { $regex: options.search, $options: 'i'} }, {brand: { $regex: options.search, $options: 'i'}}, {category: { $regex: options.search, $options: 'i'}}]
         }
     }
     return Product.find(filter, {__v: 0})
-    .sort({[options.sortBy] : options.dir.toLowerCase() === "asc" ? 1 : -1})
+    .sort({[options.sortBy] : options?.dir?.toLowerCase() === "asc" ? 1 : -1})
     .skip((options.page - 1) * options.pageSize)
     .limit(options.pageSize)
 }

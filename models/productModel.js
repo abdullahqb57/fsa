@@ -6,6 +6,7 @@ const productSchema = new Schema({
     model: {type: String, required: [true, 'Model is required']},
     price: {type: Number, required: [true, 'Price is required']},
     inStock: {type: Boolean, default: false},
+    img: { type: String },
     category: {type: String, required: [true, 'Category is required']},
     discount: {type: Number, default: 0 },
     updatedAt: {type: Date, default: Date.now},

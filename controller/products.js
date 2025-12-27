@@ -9,6 +9,8 @@ const products = async (req, res) => {
         const options = {page, pageSize, sortBy, dir, search}
         const data = await Products.getProduct(options)
         const totalRecords = await Products.getProductCount(options);
+
+        // console.log("PRODUCTS", data, data.toJSON())
         const totalPages = Math.ceil(totalRecords / pageSize)
     
         const response = {
@@ -26,6 +28,7 @@ const products = async (req, res) => {
 }
 
 const createProducts = async (req, res) => {
+    console.log('create....', req.body, req.file);
     try {
         req.body.createdAt = new Date()
         await Products.createProducts(req.body)
@@ -40,9 +43,11 @@ const createProducts = async (req, res) => {
 const getProductsById = async (req, res) => {
     const product = await Products.getProductsById(req.params.id)
     const reviews = await Reviews.getReviewById(req.params.id)
+    const avgRating = await Reviews.getAvgRating(req.params.id)
     const response = {
         product,
-        reviews
+        reviews,
+        avgRating
     }
     console.log("!!", reviews, product)
     res.status(200)
